@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="wrapper">
+		<CBX_INST_ENTRY INSTANCE_NAME="|wrapper|led_7_doan:led_7_doan_inst|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_1dm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|wrapper|snake_and_apple:snake_inst|apple_generator:apple_gen_inst|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_25m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|wrapper|led_7_doan:led_7_doan_inst|lpm_divide:Div1" CBX_FILE_NAME="lpm_divide_2dm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|wrapper|led_7_doan:led_7_doan_inst|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_55m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|wrapper|snake_and_apple:snake_inst|apple_generator:apple_gen_inst|lpm_divide:Mod1" CBX_FILE_NAME="lpm_divide_15m.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

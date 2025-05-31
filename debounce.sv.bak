@@ -1,0 +1,33 @@
+module debounce (
+    input logic  button_in,
+    input logic  clk_i,
+    input logic  reset, // Thường có tín hiệu reset để khởi tạo trạng thái
+    output logic  button_out
+);
+
+    parameter DELAY = 20000;
+    logic [23:0] count = 0;
+     
+    logic  button_prev = 1'b1; // Trạng thái trước đó của nút nhấn
+
+    always @(posedge clk_i or negedge reset) begin
+        if (!reset) begin
+            count <= 0;
+ 
+            button_prev <= 1'b1;
+            button_out <= 1'b1;
+        end else begin
+            if (button_in != button_prev) begin
+                button_prev <= button_in;
+                count <= 0; // Reset bộ đếm khi phát hiện thay đổi
+            end else if (count < DELAY) begin
+                count <= count + 1;
+            end
+
+            if (count == DELAY) begin
+                button_out <= button_in;
+            end
+        end
+    end
+
+endmodule

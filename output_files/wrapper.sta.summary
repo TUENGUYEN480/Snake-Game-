@@ -1,0 +1,77 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow Model Setup 'clk_VGA:clk_VGA1|clk_vga'
+Slack : -11.364
+TNS   : -563.697
+
+Type  : Slow Model Setup 'speed_control:speed_inst|update_clk_o'
+Slack : -9.779
+TNS   : -3651.698
+
+Type  : Slow Model Setup 'CLOCK_50'
+Slack : -5.870
+TNS   : -371.874
+
+Type  : Slow Model Hold 'CLOCK_50'
+Slack : -2.521
+TNS   : -2.521
+
+Type  : Slow Model Hold 'speed_control:speed_inst|update_clk_o'
+Slack : -0.061
+TNS   : -0.225
+
+Type  : Slow Model Hold 'clk_VGA:clk_VGA1|clk_vga'
+Slack : 0.391
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'CLOCK_50'
+Slack : -1.380
+TNS   : -149.380
+
+Type  : Slow Model Minimum Pulse Width 'speed_control:speed_inst|update_clk_o'
+Slack : -0.500
+TNS   : -398.000
+
+Type  : Slow Model Minimum Pulse Width 'clk_VGA:clk_VGA1|clk_vga'
+Slack : -0.500
+TNS   : -89.000
+
+Type  : Fast Model Setup 'clk_VGA:clk_VGA1|clk_vga'
+Slack : -4.387
+TNS   : -207.237
+
+Type  : Fast Model Setup 'speed_control:speed_inst|update_clk_o'
+Slack : -3.966
+TNS   : -1460.645
+
+Type  : Fast Model Setup 'CLOCK_50'
+Slack : -2.099
+TNS   : -99.753
+
+Type  : Fast Model Hold 'CLOCK_50'
+Slack : -1.564
+TNS   : -1.564
+
+Type  : Fast Model Hold 'speed_control:speed_inst|update_clk_o'
+Slack : -0.100
+TNS   : -0.473
+
+Type  : Fast Model Hold 'clk_VGA:clk_VGA1|clk_vga'
+Slack : 0.215
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'CLOCK_50'
+Slack : -1.380
+TNS   : -149.380
+
+Type  : Fast Model Minimum Pulse Width 'speed_control:speed_inst|update_clk_o'
+Slack : -0.500
+TNS   : -398.000
+
+Type  : Fast Model Minimum Pulse Width 'clk_VGA:clk_VGA1|clk_vga'
+Slack : -0.500
+TNS   : -89.000
+
+------------------------------------------------------------

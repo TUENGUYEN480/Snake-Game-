@@ -1,0 +1,44 @@
+module key_board  (
+    input logic clk_i,
+    input logic data_i,
+    output logic enter_o,
+    output logic [3:0] direction_o
+);
+	logic [7:0] code= 8'h00;
+	logic [10:0] keyCode, previousCode;
+	logic count = 0;
+
+always_ff @(negedge clk_i)
+	begin
+	keyCode <= {data_i, keyCode[10:1]};
+		count <= count + 1;
+
+		if(count == 11)
+		begin
+			if(previousCode[8:1] == 8'hF0)
+			begin
+				code <= keyCode[8:1];
+			end
+			previousCode[8:1] <= keyCode[8:1];
+			count <= 0;
+		end
+	end
+	
+	always_ff @(posedge clk_i)
+	begin
+		if(code == 8'h1D) //up
+			direction_o <= 4'b0001;
+		else if(code == 8'h1C) //left
+			direction_o <= 4'b0100;
+		else if(code == 8'h1B)//down
+			direction_o <= 4'b0010;
+		else if(code == 8'h23)
+			direction_o <= 4'b1000; //right
+		else if(code == 8'h5A)
+			enter_o <= 1'b1;
+		else begin
+      direction_o <= direction_o;
+      enter_o <= 1'b0;
+    end 
+	end    
+endmodule

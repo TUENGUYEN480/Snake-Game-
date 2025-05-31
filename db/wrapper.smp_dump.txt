@@ -1,0 +1,14 @@
+
+State Machine - |wrapper|snake_and_apple:snake_inst|apple_generator:apple_gen_inst|state
+Name state.IDLE state.CHECK state.GENERATE 
+state.IDLE 0 0 0 
+state.GENERATE 1 0 1 
+state.CHECK 1 1 0 
+
+State Machine - |wrapper|key_board:key_inst|current_direction
+Name current_direction.0000 current_direction.1000 current_direction.0100 current_direction.0010 current_direction.0001 
+current_direction.0000 0 0 0 0 0 
+current_direction.0001 1 0 0 0 1 
+current_direction.0010 1 0 0 1 0 
+current_direction.0100 1 0 1 0 0 
+current_direction.1000 1 1 0 0 0 

@@ -1,0 +1,266 @@
+module snake_and_apple(
+    input  logic clk_i,           // Clock chính (ví dụ: clock pixel)
+    input  logic snake_clk_i,     // Clock cho logic game (chậm hơn clk_i)
+    input  logic reset_i,         // Tín hiệu reset (active-low)
+    input  logic [3:0] direction_i, // Hướng di chuyển (1000:R, 0001:L, 0100:U, 0010:D)
+    input  logic [9:0] hpos_i,      // Tọa độ ngang pixel hiện tại
+    input  logic [9:0] vpos_i,      // Tọa độ dọc pixel hiện tại
+    input  logic playing_i,       // Trạng thái đang chơi
+    input  logic game_over_i,     // Trạng thái game over (từ module khác nếu cần) - ***Có thể không cần nếu snake_colline_o là đủ***
+
+    output logic snake_colline_o, // Output: Rắn đã va chạm (biên hoặc thân)
+    output logic head_snake_gfx_o,// Output: Pixel hiện tại là đầu rắn
+    output logic body_snake_gfx_o,// Output: Pixel hiện tại là thân rắn
+    output logic apple_gfx_o,     // Output: Pixel hiện tại là táo
+    output logic border_gfx_o     // Output: Pixel hiện tại là biên
+);
+
+    // --- Tham số Kích thước và Vị trí ---
+    localparam SNAKE_SIZE      = 30; // Kích thước mỗi ô (pixel)
+    localparam MAX_LENGTH      = 20; // Chiều dài tối đa của rắn
+    localparam SNAKE_MOVE      = SNAKE_SIZE; // Bước di chuyển bằng kích thước ô
+    localparam APPLE_SIZE      = SNAKE_SIZE; // Kích thước táo
+
+    // --- Tham số Khu vực chơi và Biên ---
+    // Giả sử màn hình 640x480
+    localparam SCREEN_WIDTH    = 10'd640;
+    localparam SCREEN_HEIGHT   = 10'd480;
+    localparam BORDER_SIZE     = SNAKE_SIZE; // Độ dày biên bằng kích thước ô
+
+    localparam PLAY_AREA_X_MIN = BORDER_SIZE;                     // Tọa độ X bắt đầu khu chơi
+    localparam PLAY_AREA_Y_MIN = BORDER_SIZE;                     // Tọa độ Y bắt đầu khu chơi
+    localparam PLAY_AREA_X_GRID = 19;                             // Số ô theo chiều ngang
+    localparam PLAY_AREA_Y_GRID = 14;                             // Số ô theo chiều dọc
+    localparam PLAY_AREA_X_MAX = PLAY_AREA_X_MIN + PLAY_AREA_X_GRID * SNAKE_MOVE; // Tọa độ X kết thúc khu chơi (ngay sau ô cuối)
+    localparam PLAY_AREA_Y_MAX = PLAY_AREA_Y_MIN + PLAY_AREA_Y_GRID * SNAKE_MOVE; // Tọa độ Y kết thúc khu chơi (ngay sau ô cuối)
+
+    // --- Vị trí bắt đầu ---
+    // Đặt rắn và táo vào giữa khu vực chơi hợp lệ
+    localparam SNAKE_START_X   = PLAY_AREA_X_MIN + ((PLAY_AREA_X_GRID / 2) * SNAKE_MOVE);
+    localparam SNAKE_START_Y   = PLAY_AREA_Y_MIN + ((PLAY_AREA_Y_GRID / 2) * SNAKE_MOVE);
+    localparam APPLE_START_X   = PLAY_AREA_X_MIN + ((PLAY_AREA_X_GRID / 2 + 3) * SNAKE_MOVE); // Đặt táo cách xa rắn ban đầu
+    localparam APPLE_START_Y   = PLAY_AREA_Y_MIN + ((PLAY_AREA_Y_GRID / 2) * SNAKE_MOVE);
+
+    // --- Tín hiệu nội bộ ---
+    // Tọa độ rắn
+    logic [9:0] head_snake_x;
+    logic [9:0] head_snake_y;
+    logic [9:0] body_snake_x [MAX_LENGTH-1:0]; // Tọa độ X thân rắn
+    logic [9:0] body_snake_y [MAX_LENGTH-1:0]; // Tọa độ Y thân rắn
+    logic [MAX_LENGTH-1:0] body_snake_gfx;     // Mảng tín hiệu đồ họa cho từng đốt
+
+    // Tọa độ và trạng thái táo
+    logic [9:0] apple_x;
+    logic [9:0] apple_y;
+    logic [8:0] apple_count;         // Chiều dài hiện tại của rắn (số táo đã ăn)
+    logic       apple_colline_head; // Táo va chạm với đầu rắn (tín hiệu tức thời)
+    logic       finding_apple_pos;   // Cờ trạng thái: đang tìm vị trí mới cho táo
+
+    // Tạo số ngẫu nhiên cho vị trí táo
+    logic [$clog2(PLAY_AREA_X_GRID)-1:0] rand_x_idx; // Chỉ số ngẫu nhiên 0 -> X_GRID-1
+    logic [$clog2(PLAY_AREA_Y_GRID)-1:0] rand_y_idx; // Chỉ số ngẫu nhiên 0 -> Y_GRID-1
+    logic [9:0] random_apple_x;     // Tọa độ X ngẫu nhiên được tính toán
+    logic [9:0] random_apple_y;     // Tọa độ Y ngẫu nhiên được tính toán
+    logic       valid_apple_pos;    // Vị trí táo ngẫu nhiên có hợp lệ không (không trùng rắn)
+
+    // Tín hiệu va chạm (tính toán tổ hợp)
+    logic border_collision;
+    logic self_collision;
+
+    always_ff @(posedge snake_clk_i) begin
+        if (~reset_i) begin // Reset (Active Low)
+            head_snake_x <= SNAKE_START_X;
+            head_snake_y <= SNAKE_START_Y;
+            apple_x      <= APPLE_START_X;
+            apple_y      <= APPLE_START_Y;
+            apple_count  <= 0;
+            rand_x_idx   <= 0;
+            rand_y_idx   <= 0;
+            finding_apple_pos <= 0;
+            // Xóa tọa độ thân rắn khi reset
+            for (int i = 0; i < MAX_LENGTH; i = i + 1) begin
+                body_snake_x[i] <= 0; // Hoặc một giá trị không hợp lệ ngoài màn hình
+                body_snake_y[i] <= 0;
+            end
+        end else begin // Hoạt động bình thường
+            // Nếu không chơi hoặc đã va chạm ở chu kỳ trước -> Reset về trạng thái ban đầu
+            // Lưu ý: snake_colline_o được tính toán dựa trên vị trí *sau* khi di chuyển
+            if (~playing_i || snake_colline_o) begin
+                head_snake_x <= SNAKE_START_X;
+                head_snake_y <= SNAKE_START_Y;
+                apple_x      <= APPLE_START_X;
+                apple_y      <= APPLE_START_Y;
+                apple_count  <= 0;
+                rand_x_idx   <= 0; // Reset cả random seed
+                rand_y_idx   <= 0;
+                finding_apple_pos <= 0;
+                for (int i = 0; i < MAX_LENGTH; i = i + 1) begin
+                    body_snake_x[i] <= 0;
+                    body_snake_y[i] <= 0;
+                end
+            end else begin // Đang chơi và chưa va chạm
+                // --- Di chuyển rắn ---
+                // 1. Cập nhật thân rắn: Dịch chuyển các đốt về phía trước
+                // Đốt đầu tiên của thân lấy vị trí cũ của đầu
+                body_snake_x[0] <= head_snake_x;
+                body_snake_y[0] <= head_snake_y;
+                // Các đốt còn lại lấy vị trí của đốt phía trước nó
+                // Chỉ cập nhật các đốt thực sự tồn tại (dựa vào apple_count)
+                for (int i = 0; (i < apple_count) && (i + 1 < MAX_LENGTH); i = i + 1) begin
+                    body_snake_x[i+1] <= body_snake_x[i];
+                    body_snake_y[i+1] <= body_snake_y[i];
+                end
+
+                // 2. Cập nhật đầu rắn dựa trên hướng
+                case (direction_i)
+                    4'b1000 : head_snake_x <= head_snake_x + SNAKE_MOVE; // Right
+                    4'b0001 : head_snake_x <= head_snake_x - SNAKE_MOVE; // Left
+                    4'b0100 : head_snake_y <= head_snake_y - SNAKE_MOVE; // Up
+                    4'b0010 : head_snake_y <= head_snake_y + SNAKE_MOVE; // Down
+                    default : begin // Không di chuyển nếu không có hướng hoặc nhiều hướng
+                        head_snake_x <= head_snake_x;
+                        head_snake_y <= head_snake_y;
+                    end
+                endcase
+
+                // --- Xử lý Táo ---
+                if (finding_apple_pos) begin // Nếu đang trong trạng thái tìm vị trí táo mới
+                    // Tạo chỉ số ngẫu nhiên mới
+                    rand_x_idx <= (rand_x_idx + 7) % PLAY_AREA_X_GRID; // Đơn giản LCG
+                    rand_y_idx <= (rand_y_idx + 5) % PLAY_AREA_Y_GRID; // Đơn giản LCG
+
+                    // Kiểm tra xem vị trí ngẫu nhiên mới (tính toán tổ hợp bên dưới) có hợp lệ không
+                    if (valid_apple_pos) begin
+                        apple_x <= random_apple_x; // Đặt táo vào vị trí hợp lệ
+                        apple_y <= random_apple_y;
+                        finding_apple_pos <= 0;  // Kết thúc tìm kiếm
+                    end
+                    // Nếu không hợp lệ, giữ nguyên finding_apple_pos, rand_x/y sẽ được tạo lại ở chu kỳ sau
+                end
+                 else if (apple_colline_head) begin // Nếu đầu rắn vừa ăn táo (tính toán tổ hợp)
+                    if (apple_count < MAX_LENGTH) begin
+                        apple_count <= apple_count + 1; // Tăng chiều dài rắn
+
+                        // Bắt đầu tìm vị trí mới ngay lập tức
+                        // Tạo chỉ số ngẫu nhiên đầu tiên
+                        rand_x_idx <= (rand_x_idx + 7) % PLAY_AREA_X_GRID;
+                        rand_y_idx <= (rand_y_idx + 5) % PLAY_AREA_Y_GRID;
+
+                        // Kiểm tra xem vị trí đầu tiên này có hợp lệ không
+                        if (valid_apple_pos) begin // Nếu hợp lệ ngay
+                            apple_x <= random_apple_x; // Đặt táo luôn
+                            apple_y <= random_apple_y;
+                            finding_apple_pos <= 0; // Không cần vào trạng thái tìm kiếm
+                        end else begin // Nếu không hợp lệ
+                            finding_apple_pos <= 1; // Bật trạng thái tìm kiếm cho chu kỳ sau
+                            // apple_x, apple_y chưa thay đổi
+                        end
+                    end
+                    // else: Đã đạt chiều dài tối đa, không làm gì thêm khi ăn táo? (Có thể thêm logic thắng game)
+                end
+                // else: Không ăn táo và không tìm kiếm -> tọa độ táo giữ nguyên
+            end // end if playing and not collided
+        end // end if not reset
+    end // end always_ff @ snake_clk_i
+
+    // =========================================================================
+    // Phần 2: Logic Tổ hợp (Combinational Logic)
+    // =========================================================================
+
+    // --- Tính toán vị trí táo ngẫu nhiên ---
+    assign random_apple_x = PLAY_AREA_X_MIN + (rand_x_idx * SNAKE_MOVE);
+    assign random_apple_y = PLAY_AREA_Y_MIN + (rand_y_idx * SNAKE_MOVE);
+
+    // --- Kiểm tra va chạm đầu rắn với táo hiện tại ---
+    // So sánh bounding box của đầu rắn và táo
+    assign apple_colline_head = (head_snake_x < apple_x + APPLE_SIZE) &&
+                                (head_snake_x + SNAKE_SIZE > apple_x) &&
+                                (head_snake_y < apple_y + APPLE_SIZE) &&
+                                (head_snake_y + SNAKE_SIZE > apple_y);
+
+    // --- Kiểm tra tính hợp lệ của vị trí táo ngẫu nhiên ---
+    // Logic này kiểm tra xem `random_apple_x/y` có trùng với đầu hoặc thân rắn *hiện tại* không
+    logic random_collides_head;
+    logic random_collides_body;
+
+    assign random_collides_head = (random_apple_x < head_snake_x + SNAKE_SIZE) &&
+                                  (random_apple_x + APPLE_SIZE > head_snake_x) &&
+                                  (random_apple_y < head_snake_y + SNAKE_SIZE) &&
+                                  (random_apple_y + APPLE_SIZE > head_snake_y);
+
+    always_comb begin
+        random_collides_body = 1'b0;
+        // Chỉ kiểm tra với các đốt thân đang tồn tại (i < apple_count)
+        for (int i = 0;((i < apple_count) && (i < MAX_LENGTH)); i++) begin // *** Sửa: chỉ lặp đến apple_count ***
+             // Kiểm tra bounding box của táo ngẫu nhiên và đốt thân thứ i
+             if ((random_apple_x < body_snake_x[i] + SNAKE_SIZE) &&
+                 (random_apple_x + APPLE_SIZE > body_snake_x[i]) &&
+                 (random_apple_y < body_snake_y[i] + SNAKE_SIZE) &&
+                 (random_apple_y + APPLE_SIZE > body_snake_y[i])) begin
+                 random_collides_body = 1'b1;
+                // break; // Đã va chạm, không cần kiểm tra thêm
+             end
+        end
+    end
+
+    assign valid_apple_pos = !random_collides_head && !random_collides_body;
+
+    // --- Phát hiện va chạm của rắn (Game Over Condition) ---
+    // Logic này kiểm tra vị trí *hiện tại* của đầu rắn (sau khi di chuyển)
+    // 1. Va chạm biên
+    assign border_collision = (head_snake_x < PLAY_AREA_X_MIN) || (head_snake_x >= PLAY_AREA_X_MAX) || // >= vì tọa độ là góc trên trái
+                              (head_snake_y < PLAY_AREA_Y_MIN) || (head_snake_y >= PLAY_AREA_Y_MAX);
+
+    // 2. Va chạm thân
+    always_comb begin
+        self_collision = 1'b0;
+        // Chỉ kiểm tra với các đốt thân đang tồn tại (i < apple_count)
+        for (int i = 0; ((i < apple_count) && (i < MAX_LENGTH)); i++) begin
+            // So sánh trực tiếp tọa độ góc trên trái (vì di chuyển theo lưới)
+            if ((head_snake_x == body_snake_x[i]) && (head_snake_y == body_snake_y[i])) begin
+                self_collision = 1'b1;
+                //break; // Đã va chạm, không cần kiểm tra thêm
+            end
+        end
+    end
+
+    // Tổng hợp va chạm cuối cùng
+    assign snake_colline_o = border_collision || self_collision;
+	 // =========================================================================
+// Phần 3: Logic Đồ họa (Combinational - Kiểm tra theo hpos_i/vpos_i)
+// =========================================================================
+always_comb begin
+    // Mặc định tất cả = 0 (không hiển thị)
+    head_snake_gfx_o = 1'b0;
+    body_snake_gfx_o = 1'b0;
+    apple_gfx_o      = 1'b0;
+    border_gfx_o     = 1'b0;
+
+    // --- Kiểm tra biên (border) ---
+    if ((hpos_i < BORDER_SIZE) || (hpos_i >= SCREEN_WIDTH - BORDER_SIZE) || 
+        (vpos_i < BORDER_SIZE) || (vpos_i >= SCREEN_HEIGHT - BORDER_SIZE)) begin
+        border_gfx_o = 1'b1;  // Pixel thuộc biên
+    end
+
+    // --- Kiểm tra đầu rắn ---
+    if ((hpos_i >= head_snake_x) && (hpos_i < head_snake_x + SNAKE_SIZE) && 
+        (vpos_i >= head_snake_y) && (vpos_i < head_snake_y + SNAKE_SIZE)) begin
+        head_snake_gfx_o = 1'b1;
+    end
+
+    // --- Kiểm tra thân rắn ---
+    body_snake_gfx_o = 1'b0;  // Mặc định
+    for (int i = 0; i < apple_count && i < MAX_LENGTH; i++) begin
+        if ((hpos_i >= body_snake_x[i]) && (hpos_i < body_snake_x[i] + SNAKE_SIZE) && 
+            (vpos_i >= body_snake_y[i]) && (vpos_i < body_snake_y[i] + SNAKE_SIZE)) begin
+            body_snake_gfx_o = 1'b1;
+        end
+    end
+
+    // --- Kiểm tra táo ---
+    if ((hpos_i >= apple_x) && (hpos_i < apple_x + APPLE_SIZE) && 
+        (vpos_i >= apple_y) && (vpos_i < apple_y + APPLE_SIZE)) begin
+        apple_gfx_o = 1'b1;
+    end
+end
+endmodule 

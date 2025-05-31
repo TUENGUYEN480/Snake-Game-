@@ -1,0 +1,27 @@
+module wrapper (
+    input logic CLOCK_50,
+    input logic  SW[0],
+    input logic PS2_CLK,
+    input logic PS2_DAT,
+    output logic VGA_HS,
+    output logic VGA_VS,
+	 output logic VGA_CLK,	
+    output logic [3:0] VGA_R,
+    output logic [3:0] VGA_G,
+    output logic [3:0] VGA_B8
+);
+  logic reset;
+  assign reset = SW[0];
+  snake_top top (
+      .clk_i(CLOCK_50),
+      .kb_clk_i(PS2_CLK),
+      .kb_data_i(PS2_DAT),
+      .reset_i(reset),
+		.vga_clk_1(VGA_CLK),
+      .hsync_no(VGA_HS),
+      .vsync_no(VGA_VS),
+      .r_o(VGA_R),
+      .g_o(VGA_G),
+      .b_o(VGA_B)
+  );
+endmodule

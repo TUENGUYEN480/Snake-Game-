@@ -1,0 +1,58 @@
+module VGA_controller (
+input logic clk_i,
+input logic reset,
+output logic hsync, vsync,
+ output logic  display_on_o,
+ output logic  [9:0] hpos,
+ output  logic [9:0] vpos
+ ); 
+ 
+ // khac cho tin hieu output logic la hsync_no , vsync_no
+ 
+ logic hmaxxed;
+ logic vmaxxed;
+ logic HSYN_i;
+ logic VSYN_i;
+  localparam H_DISPLAY = 640 ; // horizontal display width
+  localparam H_BACK    = 48; // left border (back porch)
+ localparam H_FRONT    = 16; // right border (front porch)
+ localparam H_SYNC     = 96; // horizontal sync width
+ 
+ localparam V_DISPLAY  = 480; // vertical display height
+ localparam V_TOP      = 10; // vertical top border
+ localparam V_BOTTOM   = 33; // vertical bottom border
+ localparam V_SYNC     = 2; // vertical sync  lines
+ 
+ localparam H_SYNC_START = H_DISPLAY + H_FRONT;  //656
+ localparam H_SYNC_END= H_DISPLAY + H_FRONT + H_SYNC- 1; // 751
+ localparam H_MAX= H_DISPLAY + H_BACK + H_FRONT + H_SYNC- 1; //799
+ 
+ localparam V_SYNC_START = V_DISPLAY + V_BOTTOM;      //513
+ localparam V_SYNC_END = V_DISPLAY + V_BOTTOM + V_SYNC- 1; //514	
+ localparam V_MAX = V_DISPLAY + V_TOP + V_BOTTOM + V_SYNC- 1; //524
+ 
+ assign hmaxxed = (hpos == H_MAX); //|| reset;
+ assign vmaxxed = (vpos == V_MAX);// || reset;
+ 
+ always_ff @( posedge clk_i ) begin 
+	
+	if(hpos==H_MAX) hpos <= 0;
+	else hpos <= hpos + 1;
+end
+
+ always_ff @( posedge clk_i ) begin 
+ 
+ if(hpos==H_MAX) begin 
+ if(vpos==V_MAX)
+ vpos <= 0;
+ else
+ vpos <= vpos + 1;
+ end 
+ end 
+  assign hsync = ~(hpos>=H_SYNC_START && hpos<=H_SYNC_END);
+  assign vsync = ~(vpos>=V_SYNC_START && vpos<= V_SYNC_END); // SUA TIN HIEU 
+  assign display_on_o = (hpos<H_DISPLAY) && (vpos<V_DISPLAY);
+endmodule
+ 
+
+ 

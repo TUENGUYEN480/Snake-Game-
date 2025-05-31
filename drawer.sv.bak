@@ -1,0 +1,38 @@
+module drawer (
+    input logic display_enable_i,
+    input logic head_snake_gfx_i,
+    input logic body_snake_gfx_i,
+    input logic apple_gfx_i,
+    input logic border_gfx_i,
+    output logic [3:0] r_o,
+    output logic [3:0] g_o,
+    output logic [3:0] b_o
+);
+
+    always_comb begin
+        // Mặc định nền màu trắng
+        r_o = 4'd15;
+        g_o = 4'd15;
+        b_o = 4'd15;
+
+        if (display_enable_i) begin
+            if (border_gfx_i) begin
+                // Viền màu xanh dương
+                r_o = 4'd0;
+                g_o = 4'd0;
+                b_o = 4'd15;
+            end else if (head_snake_gfx_i || body_snake_gfx_i) begin
+                // Rắn màu đỏ
+                r_o = 4'd15;
+                g_o = 4'd0;
+                b_o = 4'd0;
+            end else if (apple_gfx_i) begin
+                // Táo màu xanh lá cây
+                r_o = 4'd0;
+                g_o = 4'd15;
+                b_o = 4'd0;
+            end
+        end
+    end
+
+endmodule
