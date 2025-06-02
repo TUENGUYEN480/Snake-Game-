@@ -1,8 +1,7 @@
 |wrapper
-CLOCK_50 => CLOCK_50.IN4
-SW[0] => SW[0].IN5
-SW[1] => SW[1].IN2
-SW[2] => ~NO_FANOUT~
+CLOCK_50 => CLOCK_50.IN1
+SW[0] => SW[0].IN1
+SW[1] => SW[1].IN1
 KEY[0] => KEY[0].IN1
 KEY[1] => KEY[1].IN1
 KEY[2] => KEY[2].IN1
@@ -13,51 +12,103 @@ LEDG[0] <= KEY[0].DB_MAX_OUTPUT_PORT_TYPE
 LEDG[1] <= KEY[1].DB_MAX_OUTPUT_PORT_TYPE
 LEDG[2] <= KEY[2].DB_MAX_OUTPUT_PORT_TYPE
 LEDG[3] <= KEY[3].DB_MAX_OUTPUT_PORT_TYPE
-HEX0[0] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX0[1] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX0[2] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX0[3] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX0[4] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX0[5] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX0[6] <= led_7_doan:led_7_doan_inst.hang_don_vi
-HEX1[0] <= led_7_doan:led_7_doan_inst.hang_chuc
-HEX1[1] <= led_7_doan:led_7_doan_inst.hang_chuc
-HEX1[2] <= led_7_doan:led_7_doan_inst.hang_chuc
-HEX1[3] <= led_7_doan:led_7_doan_inst.hang_chuc
-HEX1[4] <= led_7_doan:led_7_doan_inst.hang_chuc
-HEX1[5] <= led_7_doan:led_7_doan_inst.hang_chuc
-HEX1[6] <= led_7_doan:led_7_doan_inst.hang_chuc
-VGA_HS <= VGA_controller:vga_inst.hsync
-VGA_VS <= VGA_controller:vga_inst.vsync
-VGA_CLK <= vga_clk.DB_MAX_OUTPUT_PORT_TYPE
-VGA_BLANK <= display_on.DB_MAX_OUTPUT_PORT_TYPE
-VGA_R[0] <= drawer:draw_inst.r_o
-VGA_R[1] <= drawer:draw_inst.r_o
-VGA_R[2] <= drawer:draw_inst.r_o
-VGA_R[3] <= drawer:draw_inst.r_o
-VGA_R[4] <= drawer:draw_inst.r_o
-VGA_R[5] <= drawer:draw_inst.r_o
-VGA_R[6] <= drawer:draw_inst.r_o
-VGA_R[7] <= drawer:draw_inst.r_o
-VGA_G[0] <= drawer:draw_inst.g_o
-VGA_G[1] <= drawer:draw_inst.g_o
-VGA_G[2] <= drawer:draw_inst.g_o
-VGA_G[3] <= drawer:draw_inst.g_o
-VGA_G[4] <= drawer:draw_inst.g_o
-VGA_G[5] <= drawer:draw_inst.g_o
-VGA_G[6] <= drawer:draw_inst.g_o
-VGA_G[7] <= drawer:draw_inst.g_o
-VGA_B[0] <= drawer:draw_inst.b_o
-VGA_B[1] <= drawer:draw_inst.b_o
-VGA_B[2] <= drawer:draw_inst.b_o
-VGA_B[3] <= drawer:draw_inst.b_o
-VGA_B[4] <= drawer:draw_inst.b_o
-VGA_B[5] <= drawer:draw_inst.b_o
-VGA_B[6] <= drawer:draw_inst.b_o
-VGA_B[7] <= drawer:draw_inst.b_o
+HEX0[0] <= top:top_inst.hang_don_vi
+HEX0[1] <= top:top_inst.hang_don_vi
+HEX0[2] <= top:top_inst.hang_don_vi
+HEX0[3] <= top:top_inst.hang_don_vi
+HEX0[4] <= top:top_inst.hang_don_vi
+HEX0[5] <= top:top_inst.hang_don_vi
+HEX0[6] <= top:top_inst.hang_don_vi
+HEX1[0] <= top:top_inst.hang_chuc
+HEX1[1] <= top:top_inst.hang_chuc
+HEX1[2] <= top:top_inst.hang_chuc
+HEX1[3] <= top:top_inst.hang_chuc
+HEX1[4] <= top:top_inst.hang_chuc
+HEX1[5] <= top:top_inst.hang_chuc
+HEX1[6] <= top:top_inst.hang_chuc
+VGA_HS <= top:top_inst.hsync
+VGA_VS <= top:top_inst.vsync
+VGA_CLK <= top:top_inst.vga_clk
+VGA_BLANK <= top:top_inst.display_on
+VGA_R[0] <= top:top_inst.r_o
+VGA_R[1] <= top:top_inst.r_o
+VGA_R[2] <= top:top_inst.r_o
+VGA_R[3] <= top:top_inst.r_o
+VGA_R[4] <= top:top_inst.r_o
+VGA_R[5] <= top:top_inst.r_o
+VGA_R[6] <= top:top_inst.r_o
+VGA_R[7] <= top:top_inst.r_o
+VGA_G[0] <= top:top_inst.g_o
+VGA_G[1] <= top:top_inst.g_o
+VGA_G[2] <= top:top_inst.g_o
+VGA_G[3] <= top:top_inst.g_o
+VGA_G[4] <= top:top_inst.g_o
+VGA_G[5] <= top:top_inst.g_o
+VGA_G[6] <= top:top_inst.g_o
+VGA_G[7] <= top:top_inst.g_o
+VGA_B[0] <= top:top_inst.b_o
+VGA_B[1] <= top:top_inst.b_o
+VGA_B[2] <= top:top_inst.b_o
+VGA_B[3] <= top:top_inst.b_o
+VGA_B[4] <= top:top_inst.b_o
+VGA_B[5] <= top:top_inst.b_o
+VGA_B[6] <= top:top_inst.b_o
+VGA_B[7] <= top:top_inst.b_o
 
 
-|wrapper|key_board:key_inst
+|wrapper|top:top_inst
+clk_i => clk_i.IN4
+reset_i => reset_i.IN5
+enter_i => enter_i.IN2
+KEY_0 => KEY_0.IN1
+KEY_1 => KEY_1.IN1
+KEY_2 => KEY_2.IN1
+KEY_3 => KEY_3.IN1
+hang_chuc[0] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_chuc[1] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_chuc[2] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_chuc[3] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_chuc[4] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_chuc[5] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_chuc[6] <= led_7_doan:led_7_doan_inst.hang_chuc
+hang_don_vi[0] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hang_don_vi[1] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hang_don_vi[2] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hang_don_vi[3] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hang_don_vi[4] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hang_don_vi[5] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hang_don_vi[6] <= led_7_doan:led_7_doan_inst.hang_don_vi
+hsync <= VGA_controller:vga_inst.hsync
+vsync <= VGA_controller:vga_inst.vsync
+display_on <= display_on.DB_MAX_OUTPUT_PORT_TYPE
+vga_clk <= vga_clk.DB_MAX_OUTPUT_PORT_TYPE
+r_o[0] <= drawer:draw_inst.r_o
+r_o[1] <= drawer:draw_inst.r_o
+r_o[2] <= drawer:draw_inst.r_o
+r_o[3] <= drawer:draw_inst.r_o
+r_o[4] <= drawer:draw_inst.r_o
+r_o[5] <= drawer:draw_inst.r_o
+r_o[6] <= drawer:draw_inst.r_o
+r_o[7] <= drawer:draw_inst.r_o
+g_o[0] <= drawer:draw_inst.g_o
+g_o[1] <= drawer:draw_inst.g_o
+g_o[2] <= drawer:draw_inst.g_o
+g_o[3] <= drawer:draw_inst.g_o
+g_o[4] <= drawer:draw_inst.g_o
+g_o[5] <= drawer:draw_inst.g_o
+g_o[6] <= drawer:draw_inst.g_o
+g_o[7] <= drawer:draw_inst.g_o
+b_o[0] <= drawer:draw_inst.b_o
+b_o[1] <= drawer:draw_inst.b_o
+b_o[2] <= drawer:draw_inst.b_o
+b_o[3] <= drawer:draw_inst.b_o
+b_o[4] <= drawer:draw_inst.b_o
+b_o[5] <= drawer:draw_inst.b_o
+b_o[6] <= drawer:draw_inst.b_o
+b_o[7] <= drawer:draw_inst.b_o
+
+
+|wrapper|top:top_inst|key_board:key_inst
 clk_i => clk_i.IN4
 reset => reset.IN4
 KEY_0 => KEY_0.IN1
@@ -70,7 +121,7 @@ direction_o[2] <= direction_o[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 direction_o[3] <= direction_o[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|key_board:key_inst|debounce:db0
+|wrapper|top:top_inst|key_board:key_inst|debounce:db0
 button_in => always0.IN1
 button_in => button_out~reg0.DATAIN
 button_in => button_prev.DATAIN
@@ -129,7 +180,7 @@ reset => count[23].ACLR
 button_out <= button_out~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|key_board:key_inst|debounce:db1
+|wrapper|top:top_inst|key_board:key_inst|debounce:db1
 button_in => always0.IN1
 button_in => button_out~reg0.DATAIN
 button_in => button_prev.DATAIN
@@ -188,7 +239,7 @@ reset => count[23].ACLR
 button_out <= button_out~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|key_board:key_inst|debounce:db2
+|wrapper|top:top_inst|key_board:key_inst|debounce:db2
 button_in => always0.IN1
 button_in => button_out~reg0.DATAIN
 button_in => button_prev.DATAIN
@@ -247,7 +298,7 @@ reset => count[23].ACLR
 button_out <= button_out~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|key_board:key_inst|debounce:db3
+|wrapper|top:top_inst|key_board:key_inst|debounce:db3
 button_in => always0.IN1
 button_in => button_out~reg0.DATAIN
 button_in => button_prev.DATAIN
@@ -306,13 +357,12 @@ reset => count[23].ACLR
 button_out <= button_out~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|clk_VGA:clk_VGA1
-clk_i => clk_vga~reg0.CLK
-clk_i => a.CLK
-clk_vga <= clk_vga~reg0.DB_MAX_OUTPUT_PORT_TYPE
+|wrapper|top:top_inst|clk_VGA:clk_VGA1
+clk_i => clk_div.CLK
+clk_vga <= clk_div.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|speed_control:speed_inst
+|wrapper|top:top_inst|speed_control:speed_inst
 clk_i => update_clk_o~reg0.CLK
 clk_i => count[0].CLK
 clk_i => count[1].CLK
@@ -342,7 +392,7 @@ clk_i => count[24].CLK
 update_clk_o <= update_clk_o~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|VGA_controller:vga_inst
+|wrapper|top:top_inst|VGA_controller:vga_inst
 clk_i => vpos[0]~reg0.CLK
 clk_i => vpos[1]~reg0.CLK
 clk_i => vpos[2]~reg0.CLK
@@ -389,7 +439,7 @@ vpos[8] <= vpos[8]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 vpos[9] <= vpos[9]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|game_stage_machine:state_inst
+|wrapper|top:top_inst|game_stage_machine:state_inst
 clk_i => game_over_o~reg0.CLK
 clk_i => playing_o~reg0.CLK
 clk_i => state.CLK
@@ -402,7 +452,7 @@ playing_o <= playing_o~reg0.DB_MAX_OUTPUT_PORT_TYPE
 game_over_o <= game_over_o~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|snake_and_apple:snake_inst
+|wrapper|top:top_inst|snake_and_apple:snake_inst
 clk_i => clk_i.IN3
 snake_clk_i => body_snake_y[0][0].CLK
 snake_clk_i => body_snake_y[0][1].CLK
@@ -1801,7 +1851,7 @@ apple_gfx_o <= apple_gfx_o~reg0.DB_MAX_OUTPUT_PORT_TYPE
 border_gfx_o <= border_gfx_o~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|snake_and_apple:snake_inst|random:lfsr_gen_x
+|wrapper|top:top_inst|snake_and_apple:snake_inst|random:lfsr_gen_x
 clk => lfsr[0].CLK
 clk => lfsr[1].CLK
 clk => lfsr[2].CLK
@@ -1819,7 +1869,7 @@ random_out[3] <= lfsr[3].DB_MAX_OUTPUT_PORT_TYPE
 random_out[4] <= lfsr[4].DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|snake_and_apple:snake_inst|random:lfsr_gen_y
+|wrapper|top:top_inst|snake_and_apple:snake_inst|random:lfsr_gen_y
 clk => lfsr[0].CLK
 clk => lfsr[1].CLK
 clk => lfsr[2].CLK
@@ -1837,7 +1887,7 @@ random_out[3] <= lfsr[3].DB_MAX_OUTPUT_PORT_TYPE
 random_out[4] <= lfsr[4].DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|snake_and_apple:snake_inst|apple_generator:apple_gen_inst
+|wrapper|top:top_inst|snake_and_apple:snake_inst|apple_generator:apple_gen_inst
 clk_i => rand_y[0]~reg0.CLK
 clk_i => rand_y[1]~reg0.CLK
 clk_i => rand_y[2]~reg0.CLK
@@ -2005,7 +2055,7 @@ apple_count[7] <= apple_count[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 apple_count[8] <= apple_count[8]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|drawer:draw_inst
+|wrapper|top:top_inst|drawer:draw_inst
 display_enable_i => r_o.OUTPUTSELECT
 display_enable_i => r_o.OUTPUTSELECT
 display_enable_i => r_o.OUTPUTSELECT
@@ -2030,12 +2080,20 @@ display_enable_i => b_o.OUTPUTSELECT
 display_enable_i => b_o.OUTPUTSELECT
 display_enable_i => b_o.OUTPUTSELECT
 display_enable_i => b_o.OUTPUTSELECT
-head_snake_gfx_i => always0.IN0
-body_snake_gfx_i => always0.IN1
+head_snake_gfx_i => r_o.OUTPUTSELECT
+head_snake_gfx_i => g_o.OUTPUTSELECT
+head_snake_gfx_i => b_o.OUTPUTSELECT
+head_snake_gfx_i => b_o.OUTPUTSELECT
+head_snake_gfx_i => g_o.DATAA
+body_snake_gfx_i => r_o.OUTPUTSELECT
+body_snake_gfx_i => b_o.OUTPUTSELECT
+body_snake_gfx_i => g_o.DATAA
 apple_gfx_i => r_o.DATAA
 apple_gfx_i => b_o.DATAA
 border_gfx_i => r_o.OUTPUTSELECT
 border_gfx_i => g_o.OUTPUTSELECT
+border_gfx_i => g_o.OUTPUTSELECT
+border_gfx_i => b_o.OUTPUTSELECT
 border_gfx_i => b_o.OUTPUTSELECT
 r_o[0] <= r_o.DB_MAX_OUTPUT_PORT_TYPE
 r_o[1] <= r_o.DB_MAX_OUTPUT_PORT_TYPE
@@ -2063,34 +2121,25 @@ b_o[6] <= b_o.DB_MAX_OUTPUT_PORT_TYPE
 b_o[7] <= b_o.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|wrapper|led_7_doan:led_7_doan_inst
-clk_i => count[0].CLK
-clk_i => count[1].CLK
-clk_i => count[2].CLK
-clk_i => count[3].CLK
-clk_i => count[4].CLK
-clk_i => count[5].CLK
-clk_i => count[6].CLK
-clk_i => count[7].CLK
-clk_i => count[8].CLK
-reset_i => count[0].ACLR
-reset_i => count[1].ACLR
-reset_i => count[2].ACLR
-reset_i => count[3].ACLR
-reset_i => count[4].ACLR
-reset_i => count[5].ACLR
-reset_i => count[6].ACLR
-reset_i => count[7].ACLR
-reset_i => count[8].ACLR
-apple_colline => count[8].ENA
-apple_colline => count[7].ENA
-apple_colline => count[6].ENA
-apple_colline => count[5].ENA
-apple_colline => count[4].ENA
-apple_colline => count[3].ENA
-apple_colline => count[2].ENA
-apple_colline => count[1].ENA
-apple_colline => count[0].ENA
+|wrapper|top:top_inst|led_7_doan:led_7_doan_inst
+clk_i => score[0].CLK
+clk_i => score[1].CLK
+clk_i => score[2].CLK
+clk_i => score[3].CLK
+clk_i => score[4].CLK
+clk_i => score[5].CLK
+clk_i => score[6].CLK
+clk_i => apple_colline_d1.CLK
+reset_i => score[0].ACLR
+reset_i => score[1].ACLR
+reset_i => score[2].ACLR
+reset_i => score[3].ACLR
+reset_i => score[4].ACLR
+reset_i => score[5].ACLR
+reset_i => score[6].ACLR
+reset_i => apple_colline_d1.ACLR
+apple_colline => apple_colline_rising.IN1
+apple_colline => apple_colline_d1.DATAIN
 hang_chuc[0] <= WideOr6.DB_MAX_OUTPUT_PORT_TYPE
 hang_chuc[1] <= WideOr5.DB_MAX_OUTPUT_PORT_TYPE
 hang_chuc[2] <= WideOr4.DB_MAX_OUTPUT_PORT_TYPE

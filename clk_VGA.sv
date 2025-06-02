@@ -1,12 +1,13 @@
 module clk_VGA(
-input logic clk_i,
-output logic clk_vga
+    input  logic clk_i,    
+  
+    output logic clk_vga     
 );
- logic a=0  ;
- always_ff @(posedge clk_i) begin 
- a <= ~a;
- clk_vga <= a;
- end 
- endmodule 
- 
- 
+
+    logic clk_div;
+    always_ff @(posedge clk_i) begin
+		clk_div <= ~clk_div;  // Toggle every clock edge
+    end
+    assign clk_vga = clk_div;
+
+endmodule

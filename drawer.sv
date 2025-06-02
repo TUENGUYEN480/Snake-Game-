@@ -21,11 +21,16 @@ module drawer (
                 r_o = 8'd0;
                 g_o = 8'd0;
                 b_o = 8'd255;
-            end else if (head_snake_gfx_i || body_snake_gfx_i) begin
+            end else if (head_snake_gfx_i) begin
                 //  màu đỏ
                 r_o = 8'd255;
                 g_o = 8'd0;
                 b_o = 8'd0;
+				end else if ( body_snake_gfx_i) begin
+					// màu đỏ nhạt 
+					 r_o = 8'd0255;
+					 g_o = 8'd100;
+					 b_o = 8'd100;
             end else if (apple_gfx_i) begin
                 // Táo màu xanh lá cây
                 r_o = 8'd0;

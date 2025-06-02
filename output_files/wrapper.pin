@@ -582,7 +582,7 @@ MSEL1                        : P21       :        :                   :         
 VCCIO6                       : P22       : power  :                   : 3.3V    : 6         :                
 KEY[2]                       : P23       : input  : 3.3-V LVTTL       :         : 6         : Y              
 GND*                         : P24       :        :                   :         : 6         :                
-SW[2]                        : P25       : input  : 3.3-V LVTTL       :         : 6         : Y              
+GND+                         : P25       :        :                   :         : 6         :                
 GND+                         : P26       :        :                   :         : 6         :                
 GND                          : R1        : gnd    :                   :         :           :                
 GND*                         : R2        :        :                   :         : 1         :                

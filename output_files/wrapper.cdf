@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP2C35F672) Path("C:/Users/nguye/Desktop/temp/output_files/") File("wrapper.sof") MfrSpec(OpMask(1));
+		Device PartName(EP2C35F672) Path("C:/Users/nguye/Desktop/snake have top/Snake-Game-/output_files/") File("wrapper.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

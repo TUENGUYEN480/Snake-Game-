@@ -1,2 +1,1 @@
-Info (10281): Verilog HDL Declaration information at wrapper.sv(12): object "VGA_CLK" differs only in case from object "vga_clk" in the same scope
 Warning (10268): Verilog HDL information at key_board.sv(28): always construct contains both blocking and non-blocking assignments
