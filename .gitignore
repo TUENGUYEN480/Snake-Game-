@@ -1,0 +1,46 @@
+# Backup files
+*.bak
+
+# Quartus II generated files
+db/
+incremental_db/
+output_files/
+simulation/
+
+# Quartus project files (optional - comment out if you want to track them)
+*.qws
+*.qpf.bak
+*.qsf.bak
+
+# Compilation results
+*.rpt
+*.summary
+*.done
+*.jdi
+*.pin
+*.sof
+*.pof
+*.qws
+
+# ModelSim/Questa generated files
+work/
+transcript
+*.wlf
+*.vstf
+vsim.wlf
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
